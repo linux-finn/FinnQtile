@@ -33,7 +33,7 @@ keys = [
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     
-    # Move windows between left/right columns or move up/down in current stack
+    # Move windows
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
@@ -58,8 +58,8 @@ keys = [
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
-    Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen on the focused window"),
-    Key([mod], "t", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
+    Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
+    Key([mod], "t", lazy.window.toggle_floating(), desc="Toggle floating"),
     
     # Qtile controls
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
@@ -70,8 +70,8 @@ keys = [
     # Screenshot
     Key([mod], "s", lazy.spawn("scrot -s"), desc="Take screenshot"),
     
-    # Wallpaper changer
-    Key([mod, "shift"], "w", lazy.spawn("sh -c 'feh --bg-scale --randomize /home/linuxfinn/wallpaper/*'"), desc="Random wallpaper"),
+    # Wallpaper changer - Updated for Nextcloud
+    Key([mod, "shift"], "w", lazy.spawn("sh -c 'feh --bg-scale --randomize ~/Nextcloud/Wallpaper/*'"), desc="Random wallpaper"),
 ]
 
 # Numbered workspaces
@@ -176,7 +176,6 @@ screens = [
                 foreground=colors['gray'],
                 padding=10
             ),
-            # Conditional power widget - battery on laptop, power icon on desktop
             *(
                 [widget.Battery(
                     format='{percent:2.0%} {char}',
@@ -227,8 +226,10 @@ screens = [
 def autostart():
     subprocess.Popen(['feh', '--bg-fill', '/home/linuxfinn/Downloads/Arch Wallpaper.png'])
     subprocess.Popen(['dunst'])
+    subprocess.Popen(['picom'])
+    subprocess.Popen(['nextcloud'])
+    subprocess.Popen(['setxkbmap', '-option', 'altwin:swap_alt_win'])
 
-# Basic settings
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating()),
     Drag([mod], "Button3", lazy.window.set_size_floating()),
