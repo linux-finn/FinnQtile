@@ -2,6 +2,11 @@ from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 import subprocess
+import os
+
+# Detect if we have a battery (laptop vs desktop)
+def has_battery():
+    return os.path.exists('/sys/class/power_supply/BAT0') or os.path.exists('/sys/class/power_supply/BAT1')
 
 mod = "mod4"
 terminal = "alacritty"
@@ -27,20 +32,20 @@ keys = [
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
-
+    
     # Move windows between left/right columns or move up/down in current stack
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-
+    
     # Grow windows
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
-
+    
     # Launch applications
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "b", lazy.spawn("qutebrowser"), desc="Launch qutebrowser"),
@@ -48,20 +53,20 @@ keys = [
     Key([mod], "v", lazy.spawn("alacritty -e nvim"), desc="Launch neovim"),
     Key([mod], "m", lazy.spawn("mpv"), desc="Launch mpv"),
     Key([mod], "z", lazy.spawn("zathura"), desc="Launch zathura PDF viewer"),
-
+    
     # Layout and window controls
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
     Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen on the focused window"),
     Key([mod], "t", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
-
+    
     # Qtile controls
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Launch rofi"),
-
+    
     # Screenshot
     Key([mod], "s", lazy.spawn("scrot -s"), desc="Take screenshot"),
     
@@ -107,6 +112,7 @@ widget_defaults = dict(
     foreground=colors['fg'],
     background=colors['bg']
 )
+
 extension_defaults = widget_defaults.copy()
 
 screens = [
@@ -170,13 +176,23 @@ screens = [
                 foreground=colors['gray'],
                 padding=10
             ),
-            widget.Battery(
-                format='{percent:2.0%} {char}',
-                foreground=colors['aqua'],
-                update_interval=60,
-                charge_char='⚡',
-                discharge_char='🔋',
-                full_char='🔋'
+            # Conditional power widget - battery on laptop, power icon on desktop
+            *(
+                [widget.Battery(
+                    format='{percent:2.0%} {char}',
+                    foreground=colors['aqua'],
+                    update_interval=60,
+                    charge_char='⚡',
+                    discharge_char='🔋',
+                    full_char='🔋'
+                )] if has_battery() else [
+                    widget.TextBox(
+                        text='🔌',
+                        foreground=colors['aqua'],
+                        fontsize=20,
+                        padding=10
+                    )
+                ]
             ),
             widget.Sep(
                 linewidth=2,
@@ -223,11 +239,13 @@ dgroups_app_rules = []
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
+
 floating_layout = layout.Floating(
     border_focus=colors['blue'],
     border_normal=colors['gray'],
     border_width=2
 )
+
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True

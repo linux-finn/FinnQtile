@@ -11,3 +11,4 @@ nm-applet &
 
 # Start volume control applet
 volumeicon &
+setxkbmap -option altwin:swap_alt_win &
