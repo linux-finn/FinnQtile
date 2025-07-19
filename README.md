@@ -13,6 +13,7 @@ My personal qtile tiling window manager configuration for Arch Linux. A clean, f
 - **Color Scheme**: Gruvbox-inspired theme with warm, easy-on-the-eyes colors
 - **Status Bar**: Comprehensive system monitoring with all essential widgets
 - **Layouts**: Multiple tiling layouts for different workflow needs
+- **Wallpaper Management**: Quick random wallpaper switching with keybinding
 
 ### Status Bar Widgets
 - **Current Layout** - Shows active window layout
@@ -35,6 +36,7 @@ My personal qtile tiling window manager configuration for Arch Linux. A clean, f
 - **PDF Viewer**: zathura
 - **Media Player**: mpv
 - **App Launcher**: rofi (beautiful grid layout)
+- **Notifications**: dunst
 
 ### Window Layouts
 - **Columns**: Side-by-side tiling (default)
@@ -53,16 +55,16 @@ sudo pacman -S qtile alacritty
 sudo pacman -S qutebrowser ranger neovim zathura mpv rofi
 
 # Install utilities
-sudo pacman -S feh scrot ttf-jetbrains-mono
+sudo pacman -S feh scrot ttf-jetbrains-mono dunst
 
-# Optional: for screenshots
-sudo pacman -S scrot
+# Optional: for notifications and wallpaper management
+sudo pacman -S libnotify
 ```
 
 ### Setup
 1. **Clone this repository:**
    ```bash
-   git clone https://github.com/yourusername/FinnQtile.git
+   git clone https://github.com/linux-finn/FinnQtile.git
    cd FinnQtile
    ```
 
@@ -73,14 +75,15 @@ sudo pacman -S scrot
    
    # Copy configuration files
    cp config.py ~/.config/qtile/
-   cp autostart.sh ~/.config/qtile/
-   chmod +x ~/.config/qtile/autostart.sh
    ```
 
-3. **Set your wallpaper path:**
+3. **Set up wallpapers (optional):**
    ```bash
-   # Edit autostart.sh and update wallpaper path
-   nano ~/.config/qtile/autostart.sh
+   # Create wallpaper directory
+   mkdir -p ~/wallpaper
+   
+   # Add your wallpapers to ~/wallpaper/
+   # The wallpaper changer will randomly select from this directory
    ```
 
 4. **Test configuration:**
@@ -90,74 +93,75 @@ sudo pacman -S scrot
 
 5. **Log into qtile from your display manager**
 
-## Key Bindings
+## Keybindings
 
-### Essential Keys
+### Essential Controls
 | Keybinding | Action |
-|------------|--------|
-| `Super + Return` | Open terminal |
-| `Super + d` | Launch rofi application launcher |
-| `Super + w` | Close window |
-| `Super + f` | Toggle fullscreen |
-| `Super + t` | Toggle floating mode |
+|---|---|
+| Super + Return | Open terminal |
+| Super + d | Launch rofi application launcher |
+| Super + w | Close window |
+| Super + f | Toggle fullscreen |
+| Super + t | Toggle floating mode |
 
-### Applications
+### Application Shortcuts
 | Keybinding | Application |
-|------------|-------------|
-| `Super + b` | qutebrowser |
-| `Super + e` | ranger (file manager) |
-| `Super + v` | neovim |
-| `Super + m` | mpv |
-| `Super + z` | zathura (PDF viewer) |
-| `Super + s` | Screenshot (selection) |
+|---|---|
+| Super + b | qutebrowser |
+| Super + e | ranger (file manager) |
+| Super + v | neovim |
+| Super + m | mpv |
+| Super + z | zathura (PDF viewer) |
+| Super + s | Screenshot (selection) |
 
 ### Window Management
 | Keybinding | Action |
-|------------|--------|
-| `Super + h/j/k/l` | Move focus left/down/up/right |
-| `Super + Shift + h/j/k/l` | Move window left/down/up/right |
-| `Super + Ctrl + h/j/k/l` | Resize window |
-| `Super + n` | Reset window sizes |
-| `Super + Space` | Move to next window |
+|---|---|
+| Super + h/j/k/l | Move focus left/down/up/right |
+| Super + Shift + h/j/k/l | Move window left/down/up/right |
+| Super + Ctrl + h/j/k/l | Resize window |
+| Super + n | Reset window sizes |
+| Super + Space | Move to next window |
 
-### Layouts & Workspaces
+### Workspace Management
 | Keybinding | Action |
-|------------|--------|
-| `Super + Tab` | Switch between layouts |
-| `Super + 1-9` | Switch to workspace 1-9 |
-| `Super + Shift + 1-9` | Move window to workspace 1-9 |
+|---|---|
+| Super + Tab | Switch between layouts |
+| Super + 1-9 | Switch to workspace 1-9 |
+| Super + Shift + 1-9 | Move window to workspace 1-9 |
 
 ### System Controls
 | Keybinding | Action |
-|------------|--------|
-| `Super + Ctrl + r` | Reload qtile configuration |
-| `Super + Ctrl + q` | Quit qtile |
-| `Super + r` | Qtile command prompt |
+|---|---|
+| Super + Ctrl + r | Reload qtile configuration |
+| Super + Ctrl + q | Quit qtile |
+| Super + r | Qtile command prompt |
+| **Super + Shift + w** | **Random wallpaper changer** |
 
 ## Workflow Tips
 
-### Daily Usage
-1. **Workspace Organization:**
-   - Workspace 1: Terminal work
-   - Workspace 2: Web browsing
-   - Workspace 3: File management
-   - Workspace 4: Coding/development
-   - Workspace 5: Media/entertainment
+### Workspace Organization
+- Workspace 1: Terminal work
+- Workspace 2: Web browsing
+- Workspace 3: File management
+- Workspace 4: Coding/development
+- Workspace 5: Media/entertainment
 
-2. **Efficient Navigation:**
-   - Use `Super + number` for quick workspace switching
-   - Use `Super + h/j/k/l` for vim-like window navigation
-   - Use `Super + d` for quick app launching with rofi
+### Efficient Navigation
+- Use `Super + number` for quick workspace switching
+- Use `Super + h/j/k/l` for vim-like window navigation
+- Use `Super + d` for quick app launching with rofi
+- Use `Super + Shift + w` for instant wallpaper changes
 
-3. **Layout Management:**
-   - Start with Columns layout for most tasks
-   - Switch to Max for focused work
-   - Use MonadTall for coding with terminal + editor
-   - Use Floating for dialogs and special windows
+### Layout Management
+- Start with Columns layout for most tasks
+- Switch to Max for focused work
+- Use MonadTall for coding with terminal + editor
+- Use Floating for dialogs and special windows
 
 ## Customization
 
-### Changing Colors
+### Colors
 Edit the `colors` dictionary in `config.py`:
 ```python
 colors = {
@@ -168,58 +172,58 @@ colors = {
 }
 ```
 
-### Adding Applications
+### Keybindings
 Add new keybindings in the `keys` list:
 ```python
 Key([mod], "key", lazy.spawn("application"), desc="Description"),
 ```
 
-### Status Bar Widgets
+### Widgets
 Modify the `screens` section to add/remove widgets or change their order.
 
 ### Autostart Applications
-Edit `autostart.sh` to launch applications at startup:
-```bash
-discord &
-spotify &
-```
+The configuration automatically starts:
+- **feh**: Sets default wallpaper
+- **dunst**: Notification daemon for system notifications
 
 ## Troubleshooting
 
-### Common Issues
 - **Keybindings not working**: Ensure qtile is properly loaded and no other WM is interfering
-- **Wallpaper not loading**: Check file path in `autostart.sh`
+- **Wallpaper not loading**: Check if `~/wallpaper/` directory exists and contains image files
+- **Notifications not working**: Ensure `dunst` is installed and running
 - **Widgets not displaying**: Some widgets require specific packages (e.g., battery widget on laptops only)
 
-### Testing Configuration
-Always test config changes before restarting:
+**Always test config changes before restarting:**
 ```bash
 python -m py_compile ~/.config/qtile/config.py
 ```
 
-### Logs
-Check qtile logs for errors:
+**Check qtile logs for errors:**
 ```bash
 journalctl --user -u qtile
 ```
 
 ## Dependencies
 
-### Required Packages
+### Core
 - `qtile` - Window manager
 - `alacritty` - Terminal emulator
 - `ttf-jetbrains-mono` - Font
-- `feh` - Wallpaper setter
 - `python` - For qtile configuration
 
-### Optional Packages
+### Applications
 - `rofi` - Application launcher
 - `qutebrowser` - Web browser
 - `ranger` - File manager
 - `neovim` - Text editor
 - `zathura` - PDF viewer
 - `mpv` - Media player
+
+### Utilities
+- `feh` - Wallpaper setter and image viewer
 - `scrot` - Screenshots
+- `dunst` - Notification daemon
+- `libnotify` - Notification support
 
 ## Contributing
 
