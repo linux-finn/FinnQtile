@@ -148,6 +148,16 @@ screens = [
                 foreground=colors['gray'],
                 padding=10
             ),
+            widget.Net(
+                format='{down} ↓↑ {up}',
+                foreground=colors['purple'],
+                update_interval=3
+            ),
+            widget.Sep(
+                linewidth=2,
+                foreground=colors['gray'],
+                padding=10
+            ),
             widget.Volume(
                 foreground=colors['orange'],
                 fmt='Vol: {}',
@@ -178,7 +188,7 @@ screens = [
                 foreground=colors['gray'],
                 padding=10
             ),
-            widget.Clock(format='%Y-%m-%d %H:%M', foreground=colors['blue']),
+            widget.Clock(format='%d/%m/%Y %a %I:%M %p', foreground=colors['blue']),
             widget.Sep(
                 linewidth=2,
                 foreground=colors['gray'],
