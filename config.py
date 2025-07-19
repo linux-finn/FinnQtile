@@ -179,6 +179,17 @@ screens = [
                 padding=10
             ),
             widget.Clock(format='%Y-%m-%d %H:%M', foreground=colors['blue']),
+            widget.Sep(
+                linewidth=2,
+                foreground=colors['gray'],
+                padding=10
+            ),
+            widget.QuickExit(
+                default_text='⏻',
+                countdown_format='{}',
+                foreground=colors['red'],
+                padding=10
+            ),
         ], 30, background=colors['bg']),
     ),
 ]
