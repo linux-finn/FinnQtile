@@ -8,7 +8,7 @@ import os
 def has_battery():
     return os.path.exists('/sys/class/power_supply/BAT0') or os.path.exists('/sys/class/power_supply/BAT1')
 
-mod = "mod4"
+mod = "mod1"  # Windows/Super key
 terminal = "alacritty"
 
 # Color scheme
@@ -68,9 +68,9 @@ keys = [
     Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Launch rofi"),
     
     # Screenshot
-    Key([mod], "s", lazy.spawn("scrot -s"), desc="Take screenshot"),
+    Key([mod], "s", lazy.spawn("flameshot gui"), desc="Take screenshot"),
     
-    # Wallpaper changer - Updated for Nextcloud
+    # Wallpaper changer
     Key([mod, "shift"], "w", lazy.spawn("sh -c 'feh --bg-scale --randomize ~/Nextcloud/Wallpaper/*'"), desc="Random wallpaper"),
 ]
 
@@ -107,7 +107,7 @@ layouts = [
 
 widget_defaults = dict(
     font="JetBrains Mono",
-    fontsize=16,
+    fontsize=14,
     padding=3,
     foreground=colors['fg'],
     background=colors['bg']
@@ -137,6 +137,7 @@ screens = [
             ),
             widget.WindowName(),
             widget.Spacer(),
+            
             widget.CPU(
                 format='CPU: {load_percent}%',
                 foreground=colors['green'],
@@ -158,7 +159,7 @@ screens = [
                 padding=10
             ),
             widget.Net(
-                format='{down} ↓↑ {up}',
+                format='Net: {down:.0f}{down_suffix} ↓ {up:.0f}{up_suffix} ↑',
                 foreground=colors['purple'],
                 update_interval=3
             ),
@@ -176,19 +177,20 @@ screens = [
                 foreground=colors['gray'],
                 padding=10
             ),
+            
+            # Power widget - different for desktop vs laptop
             *(
                 [widget.Battery(
-                    format='{percent:2.0%} {char}',
+                    format='Bat: {percent:2.0%} {char}',
                     foreground=colors['aqua'],
                     update_interval=60,
                     charge_char='⚡',
                     discharge_char='🔋',
-                    full_char='🔋'
+                    full_char='✓'
                 )] if has_battery() else [
                     widget.TextBox(
-                        text='🔌',
+                        text='AC Power',
                         foreground=colors['aqua'],
-                        fontsize=20,
                         padding=10
                     )
                 ]
@@ -224,11 +226,7 @@ screens = [
 
 @hook.subscribe.startup_once
 def autostart():
-    subprocess.Popen(['feh', '--bg-fill', '/home/linuxfinn/Downloads/Arch Wallpaper.png'])
-    subprocess.Popen(['dunst'])
-    subprocess.Popen(['picom'])
-    subprocess.Popen(['nextcloud'])
-    subprocess.Popen(['setxkbmap', '-option', 'altwin:swap_alt_win'])
+    subprocess.Popen(['/home/linuxfinn/.config/qtile/autostart.sh'])
 
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating()),

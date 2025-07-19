@@ -1,14 +1,16 @@
 #!/bin/bash
 
-# Set wallpaper
-feh --bg-fill '/home/linuxfinn/Downloads/Arch Wallpaper.png' &
+# Set keyboard layout to GB
+setxkbmap gb
+setxkbmap -option ""
 
-# Start compositor for transparency and effects
-picom &
+# Set wallpaper from your collection (random selection)
+feh --bg-fill --randomize "/home/linuxfinn/Documents/Wallpaper/Wallpaper/"* &
 
-# Start network manager applet
-nm-applet &
+# Start services (only if not running)
+if ! pgrep -x "picom" > /dev/null; then picom & fi
+if ! pgrep -x "nm-applet" > /dev/null; then nm-applet & fi
+if ! pgrep -x "dunst" > /dev/null; then dunst & fi
+if ! pgrep -x "nextcloud" > /dev/null; then nextcloud & fi
 
-# Start volume control applet
-volumeicon &
-setxkbmap -option altwin:swap_alt_win &
+sleep 1
